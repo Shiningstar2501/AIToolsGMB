@@ -1,0 +1,15 @@
+<!-- Example tab layout -->
+<div id="tabs">
+  <button onclick="showTool('post')">GMB Post</button>
+  <button onclick="showTool('category')">Category Finder</button>
+  <!-- Add others -->
+</div>
+
+<div id="tool-content">
+  <div id="post-tool" class="tool-section">
+    <textarea id="post-input" placeholder="Enter business info"></textarea>
+    <button onclick="generateGmbPost()">Generate GMB Post</button>
+    <div id="post-output"></div>
+  </div>
+  <!-- Repeat for other tools -->
+</div>

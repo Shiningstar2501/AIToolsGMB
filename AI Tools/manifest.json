@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "GMB AI Tools",
+  "description": "All-in-one GMB tool powered by Gemii API.",
+  "version": "1.0",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "assets/icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "<all_urls>"
+  ]
+}
