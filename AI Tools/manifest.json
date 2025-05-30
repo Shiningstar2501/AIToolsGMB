@@ -1,17 +1,29 @@
 {
   "manifest_version": 3,
-  "name": "GMB AI Tools",
-  "description": "All-in-one GMB tool powered by Gemii API.",
+  "name": "GMB AI Tools Extension",
   "version": "1.0",
-  "permissions": ["storage", "activeTab", "scripting"],
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": "assets/icon.png"
-  },
-  "background": {
-    "service_worker": "background.js"
-  },
+  "description": "Inject AI tools into Google Maps to generate GMB content using Gemini API.",
+  "permissions": ["scripting", "activeTab"],
   "host_permissions": [
-    "<all_urls>"
-  ]
+    "https://www.google.com/maps/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.google.com/maps/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_icon": {
+      "16": "assets/icon.png",    
+      "48": "assets/icon.png",
+      "128": "assets/icon.png"      
+    }
+  },
+  "icons": {
+    "16": "assets/icon.png",
+    "48": "assets/icon.png",
+    "128": "assets/icon.png"
+  }
 }

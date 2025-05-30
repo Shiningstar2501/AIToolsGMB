@@ -1,15 +1,17 @@
-<!-- Example tab layout -->
-<div id="tabs">
-  <button onclick="showTool('post')">GMB Post</button>
-  <button onclick="showTool('category')">Category Finder</button>
-  <!-- Add others -->
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GMB AI Injector</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 10px; width: 200px; }
+    button { padding: 8px 10px; width: 100%; }
+  </style>
+</head>
+<body>
+  <h3>GMB AI Tools</h3>
+  <button id="inject">Inject AI Panel</button>
 
-<div id="tool-content">
-  <div id="post-tool" class="tool-section">
-    <textarea id="post-input" placeholder="Enter business info"></textarea>
-    <button onclick="generateGmbPost()">Generate GMB Post</button>
-    <div id="post-output"></div>
-  </div>
-  <!-- Repeat for other tools -->
-</div>
+  <script src="popup.js"></script>
+</body>
+</html>
+
