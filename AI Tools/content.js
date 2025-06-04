@@ -1,32 +1,3 @@
-//     // content.js
-
-// console.log("GMB AI Tools Content Script Loaded");
-
-// // Example: Check if we're on a Google Business Profile page
-// if (window.location.href.includes("google.com/search")) {
-//   console.log("Looks like you're on a Google Business profile search result.");
-
-//   // Optional: extract visible text for context
-//   const bodyText = document.body.innerText;
-
-//   // Send data to background or popup
-//   chrome.runtime.sendMessage({
-//     type: "PAGE_CONTEXT",
-//     url: window.location.href,
-//     bodySnippet: bodyText.slice(0, 500)
-//   });
-// }
-// chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-//   if (msg.type === "GET_PAGE_DATA") {
-//     sendResponse({
-//       url: window.location.href,
-//       title: document.title,
-//       snippet: document.body.innerText.slice(0, 500)
-//     });
-//   }
-// });
-          
-
 function createGMBPanel() {
   if (document.getElementById("gmb-ai-panel")) return;
 
@@ -71,39 +42,101 @@ function createGMBPanel() {
   document.body.appendChild(panel);
 }
 
+// async function runGeminiTool(toolId) {
+//   const businessName = getBusinessNameFromMaps();
+//   if (!businessName) return alert("Could not find business name on the page.");
+
+//   const endpointMap = {
+//     "gmb-post": "generate-gmb-post",
+//     "facebook-post": "generate-facebook-post",
+//     "category": "find-gmb-category",
+//     "service": "find-gmb-services",
+//     "review-response": "generate-review-response",
+//     "qa": "generate-qa"
+//   };
+
+//   // const resultBox = document.getElementById("gmb-result");
+//   // resultBox.value = "Loading...";
+
+//     const GEMII_API_KEY = "AIzaSyB4SVhms5VqEFVlzzeAyt13NFwowF6uRBM"; // Replace if rotated
+//   const GEMII_ENDPOINT = "https://api.gemii.io/v1/";
+
+//   const resultBox = document.getElementById("gmb-result");
+//   resultBox.value = "Loading...";
+
+// chrome.runtime.sendMessage(
+//     {
+//       type: "CALL_GEMINI",
+//       task: toolLabelMap[toolId],
+//       business: businessName
+//     },
+//     (response) => {
+//       resultBox.value = response.result || "❌ No result from Gemini.";
+//     }
+//   );
+// }
+
 async function runGeminiTool(toolId) {
   const businessName = getBusinessNameFromMaps();
   if (!businessName) return alert("Could not find business name on the page.");
 
-  const endpointMap = {
-    "gmb-post": "generate-gmb-post",
-    "facebook-post": "generate-facebook-post",
-    "category": "find-gmb-category",
-    "service": "find-gmb-services",
-    "review-response": "generate-review-response",
-    "qa": "generate-qa"
+  const toolLabelMap = {
+    "gmb-post": "GMB Post",
+    "facebook-post": "Facebook Post",
+    "category": "GMB Category",
+    "service": "GMB Services",
+    "review-response": "Review Response",
+    "qa": "Q&A Section"
   };
 
   const resultBox = document.getElementById("gmb-result");
   resultBox.value = "Loading...";
 
-  try {
-    const response = await fetch(`http://localhost:5000/${endpointMap[toolId]}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ input: businessName })
-    });
 
-    const data = await response.json();
-    resultBox.value = data.result || "No response";
-  } catch (err) {
-    resultBox.value = "❌ Failed to fetch: " + err.message;
-    console.error(err);
+chrome.runtime.sendMessage(
+  {
+    type: "CALL_GEMINI",
+    task: toolLabelMap[toolId],
+    business: businessName
+  },
+  (response) => {
+    if (chrome.runtime.lastError) {
+      alert("❌ Error: " + chrome.runtime.lastError.message);
+      return;
+    }
+
+    if (!response || !response.result) {
+      alert("❌ No response received from Gemini.");
+      return;
+    }
+
+    // ✅ Open a new tab with the result
+    const html = `
+      <html>
+        <head>
+          <title>${toolLabelMap[toolId]} Result</title>
+          <style>
+            body { font-family: Arial; padding: 20px; line-height: 1.6; }
+            pre { white-space: pre-wrap; }
+          </style>
+        </head>
+        <body>
+          <h2>${toolLabelMap[toolId]}</h2>
+          <pre>${response.result}</pre>
+        </body>
+      </html>
+    `;
+
+    const newWindow = window.open();
+    newWindow.document.write(html);
+    newWindow.document.close();
   }
+);
+
 }
 
 function getBusinessNameFromMaps() {
-  const title = document.querySelector('h1[class*="fontHeadlineLarge"]');
+  const title = document.querySelector('h1[class*="DUwDvf lfPIob"]'); //<h1 class="DUwDvf lfPIob"><span class="a5H0ec"></span>Visacent LTD.<span class="G0bp3e"></span></h1>
   return title ? title.innerText.trim() : null;
 }
 

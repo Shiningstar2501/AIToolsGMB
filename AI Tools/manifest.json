@@ -7,19 +7,16 @@
   "host_permissions": [
     "https://www.google.com/maps/*"
   ],
-  "content_scripts": [
-    {
-      "matches": ["https://www.google.com/maps/*"],
-      "js": ["content.js"],
-      "run_at": "document_idle"
-    }
-  ],
   "action": {
+    "default_popup": "popup.html",
     "default_icon": {
       "16": "assets/icon.png",    
       "48": "assets/icon.png",
       "128": "assets/icon.png"      
     }
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "icons": {
     "16": "assets/icon.png",
